@@ -40,7 +40,7 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 			TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 			NVIC_InitTypeDef NVIC_InitStructure;
 
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE); //时钟使能
+			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); //时钟使能
 			
 			//定时器TIM3初始化
 			TIM_TimeBaseStructure.TIM_Period = usTim1Timerout50us - 1; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	
@@ -52,9 +52,8 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 			TIM_ITConfig(MODBUS_TIM,TIM_IT_Update,ENABLE ); //使能指定的TIM3中断,允许更新中断
 
 			//中断优先级NVIC设置
-			NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;  //TIM2中断
-			NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  //先占优先级0级
-			NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;  //从优先级3级
+			NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  //TIM3中断
+			NVIC_InitStructure.NVIC_IRQChannelPriority = 0;  //先占优先级0级
 			NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
 			NVIC_Init(&NVIC_InitStructure);  //初始化NVIC寄存器
 
@@ -67,23 +66,23 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 
 void vMBPortTimersEnable(  )
 {
-    /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
+		/* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
 		TIM_ITConfig(MODBUS_TIM, TIM_IT_Update, DISABLE);
-    TIM_Cmd(MODBUS_TIM, DISABLE);
-    TIM_ClearITPendingBit(MODBUS_TIM, TIM_IT_Update);
-    TIM_ClearFlag(MODBUS_TIM, TIM_FLAG_Update);
-    TIM_SetCounter(MODBUS_TIM, 0);
-    TIM_ITConfig(MODBUS_TIM, TIM_IT_Update, ENABLE);
-    TIM_Cmd(MODBUS_TIM, ENABLE);
+		TIM_Cmd(MODBUS_TIM, DISABLE);
+		TIM_ClearITPendingBit(MODBUS_TIM, TIM_IT_Update);
+		TIM_ClearFlag(MODBUS_TIM, TIM_FLAG_Update);
+		TIM_SetCounter(MODBUS_TIM, 0);
+		TIM_ITConfig(MODBUS_TIM, TIM_IT_Update, ENABLE);
+		TIM_Cmd(MODBUS_TIM, ENABLE);
 }
 
 void vMBPortTimersDisable(  )
 {
-    /* Disable any pending timers. */
-	 TIM_ClearITPendingBit(MODBUS_TIM, TIM_IT_Update);
-   TIM_ITConfig(MODBUS_TIM, TIM_IT_Update, DISABLE);
-	 TIM_SetCounter(MODBUS_TIM,0x0000); 
-   TIM_Cmd(MODBUS_TIM, DISABLE);
+		/* Disable any pending timers. */
+		TIM_ClearITPendingBit(MODBUS_TIM, TIM_IT_Update);
+		TIM_ITConfig(MODBUS_TIM, TIM_IT_Update, DISABLE);
+		TIM_SetCounter(MODBUS_TIM,0x0000); 
+		TIM_Cmd(MODBUS_TIM, DISABLE);
 }
 
 /* Create an ISR which is called whenever the timer has expired. This function

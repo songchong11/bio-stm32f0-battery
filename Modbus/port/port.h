@@ -34,7 +34,7 @@
 #define ENTER_CRITICAL_SECTION( )    __set_PRIMASK(1);
 #define EXIT_CRITICAL_SECTION( )     __set_PRIMASK(0);
 
-#define MODBUS_TIM TIM2
+#define MODBUS_TIM TIM3
 
 
 typedef uint8_t BOOL;

@@ -31,10 +31,10 @@
 static void prvvUARTTxReadyISR( void );
 static void prvvUARTRxISR( void );
 
-#define MODBUS_USART_CTRL_PORT		 GPIOB
-#define MODBUS_USART_CTRL_PIN  		 GPIO_Pin_0
+#define MODBUS_USART_CTRL_PORT		 GPIOA
+#define MODBUS_USART_CTRL_PIN  		 GPIO_Pin_4
 
-#define MODBUS_USART	USART2							
+#define MODBUS_USART	USART1							
 
 #define MODBUS_USART_TX_PIN 			GPIO_Pin_2
 #define MODBUS_USART_RX_PIN 			GPIO_Pin_3
@@ -79,52 +79,56 @@ vMBPortSerialEnable( BOOL xRxEnable, BOOL xTxEnable )
 BOOL
 xMBPortSerialInit( UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity eParity )
 {
-	  GPIO_InitTypeDef GPIO_InitStructure;
+	    GPIO_InitTypeDef GPIO_InitStructure;
 		USART_InitTypeDef USART_InitStructure;
 		NVIC_InitTypeDef NVIC_InitStructure;
-	 
-		printf("Modbus serial port init\r\n");
 
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOD, ENABLE);//使能GPIOA,D时钟
-		RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);//使能USART2时钟
+		RCC_AHBPeriphClockCmd( RCC_AHBPeriph_GPIOA, ENABLE);	//使能USART1，GPIOA时钟
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE );
 		
-		GPIO_InitStructure.GPIO_Pin = MODBUS_USART_CTRL_PIN;	//RS485 CTRL PIN
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-		GPIO_Init(MODBUS_USART_CTRL_PORT, &GPIO_InitStructure);
-	 
-		GPIO_InitStructure.GPIO_Pin = MODBUS_USART_TX_PIN;	//PA2
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;	//复用推挽
-		GPIO_Init(MODBUS_USART_TX_PORT, &GPIO_InitStructure);
-		 
-		GPIO_InitStructure.GPIO_Pin = MODBUS_USART_RX_PIN;//PA3
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; //浮空输入
-		GPIO_Init(MODBUS_USART_RX_PORT, &GPIO_InitStructure);  
+		GPIO_PinAFConfig(GPIOA,GPIO_PinSource2,GPIO_AF_1);
+		GPIO_PinAFConfig(GPIOA,GPIO_PinSource3,GPIO_AF_1);
 
-		RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART2,ENABLE);//复位串口2
-		RCC_APB1PeriphResetCmd(RCC_APB1Periph_USART2,DISABLE);//停止复位
-	 
-		
-		USART_InitStructure.USART_BaudRate = ulBaudRate;//波特率设置
-		USART_InitStructure.USART_WordLength = USART_WordLength_8b;//8位数据长度
+		/*
+		*  USART1_TX -> PA2 , USART1_RX ->        PA3
+		*/                                
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2|GPIO_Pin_3;                 
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+		GPIO_Init(GPIOA, &GPIO_InitStructure); 
+
+		//Usart1 NVIC 配置
+		NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+		NVIC_InitStructure.NVIC_IRQChannelPriority=3 ;//抢占优先级3
+		NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+		NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
+
+		//USART 初始化设置
+
+		USART_InitStructure.USART_BaudRate = ulBaudRate;//串口波特率
+		USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式
 		USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位
-		USART_InitStructure.USART_Parity = USART_Parity_No;///奇偶校验位
+		USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位
 		USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
-		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;//收发模式
+		USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
 
 		USART_Init(MODBUS_USART, &USART_InitStructure); ; //初始化串口
 		
 		vMBPortSerialEnable(FALSE, FALSE);//free modbus
 		
-		NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //使能串口2中断
-		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //先占优先级2级
-		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; //从优先级2级
+		NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn; //使能串口2中断
+		NVIC_InitStructure.NVIC_IRQChannelPriority = 0; //先占优先级2级
 		NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //使能外部中断通道
 		NVIC_Init(&NVIC_InitStructure); //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器
 	 
 		USART_ITConfig(MODBUS_USART, USART_IT_RXNE, ENABLE);//开启中断
 		 
 		USART_Cmd(MODBUS_USART, ENABLE);                    //使能串口 
+		
+		printf("Modbus serial port init ok\r\n");
+
     return TRUE;
 }
 
@@ -135,7 +139,7 @@ xMBPortSerialPutByte( CHAR ucByte )
      * by the protocol stack if pxMBFrameCBTransmitterEmpty( ) has been
      * called. */
 
-		MODBUS_USART->DR = ucByte; //
+		MODBUS_USART->TDR = ucByte; //
 		//USART_SendData(MODBUS_USART, ucByte);
 
         while (USART_GetFlagStatus(MODBUS_USART,USART_FLAG_TXE) == RESET){} 
@@ -149,7 +153,7 @@ xMBPortSerialGetByte( CHAR * pucByte )
     /* Return the byte in the UARTs receive buffer. This function is called
      * by the protocol stack after pxMBFrameCBByteReceived( ) has been called.
      */
-		*pucByte = MODBUS_USART->DR;
+		*pucByte = MODBUS_USART->RDR;
 		//*pucByte = USART_ReceiveData(USART1);
     return TRUE;
 }
