@@ -22,5 +22,8 @@
 #define LED_B PAout(15)
 
 void LED_Init(void);
+void slave_addr_gpio_Init(void);
+unsigned char get_slave_addr(void);
+
 
 #endif

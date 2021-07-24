@@ -24,6 +24,9 @@
 #include "mbport.h"
 #include "port.h"
 
+extern uint8_t slave_address;
+
+
  /* ----------------------- Defines ------------------------------------------*/
 //输入寄存器起始地址
 
@@ -49,11 +52,8 @@ uint8_t ucRegDiscreteBuf[REG_DISCRETE_SIZE / 8] = {0x01,0x02};
 /* ----------------------- Start implementation -----------------------------*/
 void  mb_Modbus_Init(void)
 {
-     
-     //uint8_t address = dio_Get_DIP_Value();
-	 uint8_t address = 0x02;
-	
-     ( void )eMBInit( MB_RTU, address, 0, 115200, MB_PAR_NONE );
+
+     ( void )eMBInit( MB_RTU, slave_address, 0, 115200, MB_PAR_NONE );
  
      /* Enable the Modbus Protocol Stack. */
      ( void )eMBEnable(  );
