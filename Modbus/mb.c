@@ -356,7 +356,7 @@ eMBPoll( void )
             break;
 
         case EV_FRAME_RECEIVED:
-					printf("%s %s: EV_FRAME_RECEIVED addr:%02x \r\n",__FILE__, __FUNCTION__, ucRcvAddress);
+//					printf("%s %s: EV_FRAME_RECEIVED addr:%02x \r\n",__FILE__, __FUNCTION__, ucRcvAddress);
             eStatus = peMBFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
             if( eStatus == MB_ENOERR )
             {
@@ -370,7 +370,7 @@ eMBPoll( void )
 
         case EV_EXECUTE:
         
-            printf("%s %s: EV_EXECUTE addr:%02x \r\n",__FILE__, __FUNCTION__, ucRcvAddress);
+//            printf("%s %s: EV_EXECUTE addr:%02x \r\n",__FILE__, __FUNCTION__, ucRcvAddress);
             ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
             for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )

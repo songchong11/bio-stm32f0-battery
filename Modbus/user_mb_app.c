@@ -89,7 +89,7 @@ void  user_mb_app( void )
      eMBErrorCode    eStatus = MB_ENOERR;
      int             iRegIndex;
 
-     printf("%s %s: usAddress:%x usNRegs:%02x \r\n",__FILE__, __FUNCTION__, usAddress, usNRegs);
+     //printf("%s %s: usAddress:%x usNRegs:%02x \r\n",__FILE__, __FUNCTION__, usAddress, usNRegs);
      
      if( ( usAddress >= REG_INPUT_START )
          && ( usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS ) )
@@ -132,7 +132,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 	eMBErrorCode    eStatus = MB_ENOERR;
 	int             iRegIndex;
 
-    printf("%s %s: usNRegs:%02x \r\n",__FILE__, __FUNCTION__, usNRegs);
+   // printf("%s %s: usNRegs:%02x \r\n",__FILE__, __FUNCTION__, usNRegs);
 
 	if((usAddress >= REG_HOLDING_START)&&\
 		((usAddress+usNRegs) <= (REG_HOLDING_START + REG_HOLDING_NREGS)))
@@ -187,7 +187,7 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
 	eMBErrorCode    eStatus = MB_ENOERR;
 	int             iRegIndex;
 
-    printf("%s %s: usAddress:%x usNCoils:%x , eMode:%x \r\n",__FILE__, __FUNCTION__,usAddress, usNCoils, eMode);
+    //printf("%s %s: usAddress:%x usNCoils:%x , eMode:%x \r\n",__FILE__, __FUNCTION__,usAddress, usNCoils, eMode);
 
 	if((usAddress >= REG_HOLDING_START)&&\
 		((usAddress+usNCoils) <= (REG_HOLDING_START + REG_HOLDING_NREGS)))
@@ -235,7 +235,7 @@ eMBErrorCode
 eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
     
-    printf("%s %s: \r\n",__FILE__, __FUNCTION__);
+    //printf("%s %s: \r\n",__FILE__, __FUNCTION__);
     
     ( void )pucRegBuffer;
     ( void )usAddress;

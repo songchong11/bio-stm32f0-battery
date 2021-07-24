@@ -52,7 +52,7 @@ void TIM14_IRQHandler(void)   //TIM3中断
 				TIM_ClearITPendingBit(TIM14, TIM_IT_Update  );  //清除TIMx更新中断标志 
 				LED_G = !LED_G;
 				LED_B = !LED_B;
-				printf("test\r\n");
+				//printf("test\r\n");
 		}
 }
 

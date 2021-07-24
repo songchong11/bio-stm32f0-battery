@@ -154,7 +154,7 @@ xMBPortSerialGetByte( CHAR * pucByte )
      * by the protocol stack after pxMBFrameCBByteReceived( ) has been called.
      */
 		*pucByte = MODBUS_USART->RDR;
-		//*pucByte = USART_ReceiveData(USART1);
+		//*pucByte = USART_ReceiveData(MODBUS_USART);
     return TRUE;
 }
 
@@ -199,7 +199,7 @@ void  prvvModbusUARTISR( void )
 }
 
 
-void USART2_IRQHandler(void)
+void USART1_IRQHandler(void)
 {
 	
 	prvvModbusUARTISR();

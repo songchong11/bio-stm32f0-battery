@@ -76,7 +76,7 @@ eMBFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
     eMBErrorCode    eRegStatus;
 
     
-    printf("%s %s: usLen:%x \r\n",__FILE__, __FUNCTION__, * usLen);    
+//    printf("%s %s: usLen:%x \r\n",__FILE__, __FUNCTION__, * usLen);    
 
     if( *usLen == ( MB_PDU_FUNC_READ_SIZE + MB_PDU_SIZE_MIN ) )
     {
@@ -155,7 +155,7 @@ eMBFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen )
     eMBException    eStatus = MB_EX_NONE;
     eMBErrorCode    eRegStatus;
     
-    printf("%s %s: usLen:%x \r\n",__FILE__, __FUNCTION__, * usLen);    
+//    printf("%s %s: usLen:%x \r\n",__FILE__, __FUNCTION__, * usLen);    
 
     if( *usLen == ( MB_PDU_FUNC_WRITE_SIZE + MB_PDU_SIZE_MIN ) )
     {
@@ -213,7 +213,7 @@ eMBFuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen )
     eMBException    eStatus = MB_EX_NONE;
     eMBErrorCode    eRegStatus;
     
-    printf("%s %s: usLen:%x \r\n",__FILE__, __FUNCTION__, * usLen);    
+    //printf("%s %s: usLen:%x \r\n",__FILE__, __FUNCTION__, * usLen);    
 
     if( *usLen > ( MB_PDU_FUNC_WRITE_SIZE + MB_PDU_SIZE_MIN ) )
     {
