@@ -10,7 +10,7 @@ void LED_Init(void);
 //show you a blink
 int main(void)
 {
-	
+
     LED_Init();
     delay_init();
 	uart_init(115200);
