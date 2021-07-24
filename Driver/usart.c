@@ -102,8 +102,8 @@ void uart_init(u32 bound)
     RCC_AHBPeriphClockCmd( RCC_AHBPeriph_GPIOA, ENABLE);	//Ê¹ÄÜUSART1£¬GPIOAÊ±ÖÓ
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE );
 	
-	GPIO_PinAFConfig(GPIOA,GPIO_PinSource9,GPIO_AF_1);
-	GPIO_PinAFConfig(GPIOA,GPIO_PinSource10,GPIO_AF_1);
+	GPIO_PinAFConfig(GPIOA,GPIO_PinSource2,GPIO_AF_1);
+	GPIO_PinAFConfig(GPIOA,GPIO_PinSource3,GPIO_AF_1);
 	
 	/*
 	*  USART1_TX -> PA2 , USART1_RX ->        PA3
