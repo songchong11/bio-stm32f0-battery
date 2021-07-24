@@ -44,7 +44,7 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 			
 			//定时器TIM3初始化
 			TIM_TimeBaseStructure.TIM_Period = usTim1Timerout50us - 1; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	
-			TIM_TimeBaseStructure.TIM_Prescaler = 3600 - 1; //设置用来作为TIMx时钟频率除数的预分频值
+			TIM_TimeBaseStructure.TIM_Prescaler = 2400 - 1; //设置用来作为TIMx时钟频率除数的预分频值 //20KHZ ==50us
 			TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //设置时钟分割:TDTS = Tck_tim
 			TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
 			TIM_TimeBaseInit(MODBUS_TIM, &TIM_TimeBaseStructure); //根据指定的参数初始化TIMx的时间基数单位
