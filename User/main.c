@@ -24,7 +24,7 @@ int main(void)
 	slave_addr_gpio_Init();
 	Adc_Init(); 
     delay_init();
-
+	EXIT_KEY_Init();
 	TIM14_Int_Init(10000, 4799);//1s: TIM14 is  a 48MHZ timer
 	
 	slave_address = get_slave_addr();
@@ -51,13 +51,14 @@ int main(void)
 		printf(" volt: %f, %f, %f \r\n", volt_0, volt_1, volt_2);
 #endif
 		//printf(" %x, %x %x  %x\r\n", RegularConvData_Tab[0], RegularConvData_Tab[1],RegularConvData_Tab[2],RegularConvData_Tab[3]);
-		//printf(" sample_finish %x \r\n", sample_finish); 
+#if 1
         if (sample_finish == 1) {
-           printf(" %x %x %x %x %x\r\n", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]); 
-			 TIM_Cmd(TIM3, ENABLE);                     //完成周波采样，停止定时器  
-            DMA_Cmd(DMA1_Channel1, ENABLE);            //完成周波采样，停止DMA  
-            sample_finish = 0; 
+           printf(" %x %x %x %x %x\r\n", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
+			sample_finish = 0;
+
         }
+#endif
+
 	}
 	
 }

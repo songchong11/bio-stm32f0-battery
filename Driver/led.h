@@ -24,6 +24,7 @@
 void LED_Init(void);
 void slave_addr_gpio_Init(void);
 unsigned char get_slave_addr(void);
+void EXIT_KEY_Init(void);
 
 
 #endif

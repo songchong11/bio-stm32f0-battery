@@ -172,6 +172,11 @@ void DMA1_Channel1_IRQHandler()
     DMA_ClearITPendingBit(DMA_IT_TC);                   //清除DMA中断标志位  
 }
 
-
+void start_once_a_time_adc_test(void)
+{
+	TIM_Cmd(TIM3, ENABLE);                     //完成周波采样，停止定时器  
+	DMA_Cmd(DMA1_Channel1, ENABLE);            //完成周波采样，停止DMA  
+	sample_finish = 0; 
+}
 
 

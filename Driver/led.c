@@ -1,6 +1,7 @@
 #include "led.h"
 #include "stm32f0xx.h"
 #include "usart.h"
+#include "adc.h"
 
 void LED_Init(void){
 	 GPIO_InitTypeDef  GPIO_InitStructure;
@@ -54,6 +55,47 @@ unsigned char get_slave_addr(void)
 }
 
 
+/**************************EXIT KEY **************************************************/
+void EXIT_KEY_Init(void)
+{
+		GPIO_InitTypeDef GPIO_InitStruct; 
+		EXTI_InitTypeDef EXTI_InitStruct;
+		NVIC_InitTypeDef NVIC_InitStruct;
+		/* config the extiline(PB0) clock and AFIO clock */
+		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+		RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
+		/* Configyre P[A|B|C|D|E]0  NIVC  */
+		NVIC_InitStruct.NVIC_IRQChannel = EXTI4_15_IRQn;
+		NVIC_InitStruct.NVIC_IRQChannelPriority = 0x00;
+		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+		NVIC_Init(&NVIC_InitStruct);
 
+		/* EXTI line gpio config(PF7) */	
+		GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12; 
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_Level_2;
+		GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP; // 上拉输入
+		GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+		/* EXTI line(PB0) mode config */
+		SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource12);
+		EXTI_InitStruct.EXTI_Line = EXTI_Line12;
+		EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
+		EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Falling; //下降沿中断
+		EXTI_InitStruct.EXTI_LineCmd = ENABLE;
+		EXTI_Init(&EXTI_InitStruct); 
+}
+
+void EXTI4_15_IRQHandler(void)
+{
+  if(EXTI_GetITStatus(EXTI_Line12) != RESET)
+  {
+
+	printf("key\r\n");
+	start_once_a_time_adc_test();
+    /* Clear the EXTI line 0 pending bit */
+    EXTI_ClearITPendingBit(EXTI_Line12);
+  }
+}
+/**************************EXIT KEY END**************************************************/
