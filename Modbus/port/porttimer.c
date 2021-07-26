@@ -41,7 +41,7 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 			TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 			NVIC_InitTypeDef NVIC_InitStructure;
 
-			RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); //时钟使能
+			RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE); //时钟使能
 			
 			//定时器TIM3初始化
 			TIM_TimeBaseStructure.TIM_Period = usTim1Timerout50us - 1; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	
@@ -53,7 +53,7 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 			TIM_ITConfig(MODBUS_TIM,TIM_IT_Update,ENABLE ); //使能指定的TIM3中断,允许更新中断
 
 			//中断优先级NVIC设置
-			NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  //TIM3中断
+			NVIC_InitStructure.NVIC_IRQChannel = TIM16_IRQn;  //TIM3中断
 			NVIC_InitStructure.NVIC_IRQChannelPriority = 0;  //先占优先级0级
 			NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
 			NVIC_Init(&NVIC_InitStructure);  //初始化NVIC寄存器
@@ -104,7 +104,7 @@ void  prvvModbusTIMISR( void )
    }
 }
 
-void TIM3_IRQHandler(void)   //TIM2中断
+void TIM16_IRQHandler(void)   //TIM2中断
 {
 	prvvModbusTIMISR();
 }
