@@ -13,33 +13,41 @@
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 	
 
+uint16_t RegularConvData_Tab[4];
 
 //初始化ADC															   
 void  Adc_Init(void)
 {    
 	GPIO_InitTypeDef  		GPIO_InitStructure;
 	ADC_InitTypeDef       	ADC_InitStructure;
-
+	DMA_InitTypeDef     	DMA_InitStructure;
+	
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);//使能GPIOA时钟
 
 	//先初始化ADC1通道5 IO口
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1| GPIO_Pin_5 | GPIO_Pin_6;//PA5 通道5
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;//PA5 通道5
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;//模拟输入
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;//不带上下拉
 	GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化  
  
 	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,ENABLE);	  //ADC1复位
-	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,DISABLE);	//复位结束	 
-
+	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,DISABLE);	//复位结束	
+	
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1 , ENABLE);//Enable DMA CLK
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //使能ADC1时钟
+	
+	RCC_ADCCLKConfig(RCC_ADCCLK_PCLK_Div4);
+	
 	ADC_DeInit(ADC1);
 	ADC_StructInit(&ADC_InitStructure);
 	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;//12位模式
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;//关闭连续转换
+	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;//关闭连续转换
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;//禁止触发检测，使用软件触发
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;//右对齐	
 	ADC_InitStructure.ADC_ScanDirection  = ADC_ScanDirection_Upward;//1个转换在规则序列中 也就是只转换规则序列1 
 	ADC_Init(ADC1, &ADC_InitStructure);//ADC初始化
+	
+	ADC_ChannelConfig(ADC1, ADC_Channel_5 | ADC_Channel_6 | ADC_Channel_7, ADC_SampleTime_239_5Cycles);
 
 	ADC_GetCalibrationFactor(ADC1);
 
@@ -78,7 +86,7 @@ u16 Get_Adc_Average(u8 ch,u8 times)
 		temp_val+=Get_Adc(ch);
 		delay_ms(5);
 	}
-	ADC_StopOfConversion(ADC1);
+
 	return temp_val/times;
 } 
 	 
