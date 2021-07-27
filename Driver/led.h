@@ -21,10 +21,18 @@
 #define LED_G PBout(3)
 #define LED_B PAout(15)
 
+#define X9C103_INC 		PAout(8)
+#define X9C103_UD 		PAout(9)
+#define X9C103_CS		PAout(10)
+#define WRIPE_UP 	1
+#define WRIPE_DOWN  0
+
 void LED_Init(void);
 void slave_addr_gpio_Init(void);
 unsigned char get_slave_addr(void);
 void EXIT_KEY_Init(void);
-
+void x9c103_gpio_init(void);
+int x9c103_wiper_up_or_down(uint8_t steps, uint8_t wripe_ud);
+void x9c103_store_wripe_position(void);
 
 #endif

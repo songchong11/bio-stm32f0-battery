@@ -26,6 +26,7 @@ int main(void)
     delay_init();
 	EXIT_KEY_Init();
 	TIM14_Int_Init(10000, 4799);//1s: TIM14 is  a 48MHZ timer
+	x9c103_gpio_init();
 	
 	slave_address = get_slave_addr();
 
