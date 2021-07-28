@@ -18,6 +18,8 @@ extern uint16_t adc_value[5];
 
 extern uint16_t usRegHoldingBuf[REG_HOLDING_NREGS];
 
+volatile int msg_type;
+
 //show you a blink
 int main(void)
 {
@@ -26,7 +28,7 @@ int main(void)
 	Adc_Init(); 
     delay_init();
 	EXIT_KEY_Init();
-	TIM14_Int_Init(10000, 4799);//1s: TIM14 is  a 48MHZ timer
+	//TIM14_Int_Init(10000, 4799);//1s: TIM14 is  a 48MHZ timer
 	
 	slave_address = get_slave_addr();
 
@@ -63,8 +65,26 @@ int main(void)
         }
 #endif
 
-		if (usRegHoldingBuf[0] == 0x0105)
-			printf(" usRegHoldingBuf[0]: %4x \r\n", usRegHoldingBuf[0]);
+		
+		if (msg_type == MSG_WRITE_HOLD_REGS) {
+			msg_type = NO_MSG;
+
+			delay_ms(100);
+			
+			LED_G = !LED_G;
+
+			if(((usRegHoldingBuf[0] >> 8) & 0xff) == 0x01) {
+				LED_B = !LED_B;
+				x9c103_wiper_up_or_down(usRegHoldingBuf[0] & 0xff , WRIPE_UP);
+
+			} else if(((usRegHoldingBuf[0] >> 8) & 0xff) == 0x00) {
+				LED_B = !LED_B;
+				x9c103_wiper_up_or_down(usRegHoldingBuf[0] & 0xff, WRIPE_DOWN);
+			} else {
+				//err code
+			}
+			
+		}
 	}
 	
 }

@@ -23,8 +23,10 @@
 #include "mb.h"
 #include "mbport.h"
 #include "port.h"
+#include "led.h"
 
 extern uint8_t slave_address;
+extern volatile int msg_type;
 
 
  /* ----------------------- Defines ------------------------------------------*/
@@ -40,7 +42,7 @@ uint16_t usRegInputBuf[REG_INPUT_NREGS] = {0x1000,0x1001,0x1002,0x1003,0x1004,0x
 uint16_t usRegInputStart = REG_INPUT_START;
 
 //保持寄存器内容
-uint16_t usRegHoldingBuf[REG_HOLDING_NREGS] = {0x147b,0x3f8e,0x147b,0x400e,0x1eb8,0x4055,0x147b,0x408e};
+uint16_t usRegHoldingBuf[REG_HOLDING_NREGS] = {0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000};
 //保持寄存器起始地址
 uint16_t usRegHoldingStart = REG_HOLDING_START;
 
@@ -152,6 +154,8 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 			case MB_REG_WRITE://写 MB_REG_WRITE = 0
 				while(usNRegs > 0)
 				{
+					/*write holding regs*/
+					msg_type = MSG_WRITE_HOLD_REGS;
 					usRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;
 					usRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;
 					iRegIndex++;

@@ -27,6 +27,14 @@
 #define WRIPE_UP 	1
 #define WRIPE_DOWN  0
 
+enum {
+	NO_MSG,
+	MSG_WRITE_HOLD_REGS,
+	MSG_READ_HOLD_REGS,
+	MSG_READ_INPUT_REGS,
+};
+
+
 void LED_Init(void);
 void slave_addr_gpio_Init(void);
 unsigned char get_slave_addr(void);
