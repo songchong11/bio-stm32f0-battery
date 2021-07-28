@@ -98,7 +98,7 @@ void EXTI4_15_IRQHandler(void)
 		/* Clear the EXTI line 0 pending bit */
 		EXTI_ClearITPendingBit(EXTI_Line12);
 		//printf("holding regs: %4x\r\n", usRegHoldingBuf[0]);
-
+	    x9c103_wiper_up_or_down(5, WRIPE_UP);
   }
 }
 /**************************EXIT KEY END**************************************************/
@@ -109,20 +109,18 @@ void x9c103_gpio_init(void)
 {
 	 GPIO_InitTypeDef  GPIO_InitStructure;
 
-	 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	 //使能PA端口时钟	
 	 GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10;				 //LED0-->PB.5 端口配置
 	 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; 		 //输出
 	 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
 	 GPIO_InitStructure.GPIO_OType= GPIO_OType_PP;//推挽
-	 GPIO_InitStructure.GPIO_PuPd= GPIO_PuPd_NOPULL;//无上下拉
+	 GPIO_InitStructure.GPIO_PuPd= GPIO_PuPd_DOWN;//无上下拉
 	
 	 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);	 //使能PA端口时钟	
 	 GPIO_Init(GPIOA, &GPIO_InitStructure);	
 
 
-	
-	//X9C103_INC;
-	//X9C103_UD;
+	X9C103_INC = 0;
+	X9C103_UD = 0;
 	X9C103_CS = 0;
 
 }
@@ -151,8 +149,9 @@ int x9c103_wiper_up_or_down(uint8_t steps, uint8_t wripe_ud)
 
 	
 	X9C103_INC = 1;
+	delay_us(5);
 	X9C103_CS = 1;
-	delay_ms(50);//store wripe position
+	delay_ms(30);//store wripe position
 }
 
 void x9c103_store_wripe_position(void)

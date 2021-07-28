@@ -21,18 +21,20 @@ extern uint16_t usRegHoldingBuf[REG_HOLDING_NREGS];
 //show you a blink
 int main(void)
 {
-
     LED_Init();
 	slave_addr_gpio_Init();
 	Adc_Init(); 
     delay_init();
 	EXIT_KEY_Init();
 	TIM14_Int_Init(10000, 4799);//1s: TIM14 is  a 48MHZ timer
-	x9c103_gpio_init();
 	
 	slave_address = get_slave_addr();
 
 	mb_Modbus_Init();
+
+	delay_ms(100);
+	x9c103_gpio_init();
+
 
 	printf("slave_address is %d\r\n\r\n", slave_address);
 	
