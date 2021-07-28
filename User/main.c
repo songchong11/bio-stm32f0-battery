@@ -90,10 +90,8 @@ int main(void)
 			//printf(" %x %x %x %x %x %x\r\n\r\n",usRegInputBuf[0], usRegInputBuf[1], usRegInputBuf[2]\
 										,usRegInputBuf[3], usRegInputBuf[4], usRegInputBuf[5]);
 			
-			printf("--------- %f -----------\r\n",f_test.volt_f);
-			printf(" %x %x %x %x\r\n", f_test.volt_v[0], f_test.volt_v[1],f_test.volt_v[2],f_test.volt_v[3]);
-
-			memset(&usRegInputBuf[0], 0, sizeof(usRegInputBuf));
+			//printf("--------- %f -----------\r\n",f_test.volt_f);
+			//printf(" %x %x %x %x\r\n", f_test.volt_v[0], f_test.volt_v[1],f_test.volt_v[2],f_test.volt_v[3]);
 
 			sample_finish = 0;
 			TIM_Cmd(TIM3, ENABLE);                     //完成周波采样，停止定时器  
