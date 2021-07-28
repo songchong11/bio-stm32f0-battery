@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "adc.h"
 #include "delay.h"
+#include "mb.h"
 
 void LED_Init(void){
 	 GPIO_InitTypeDef  GPIO_InitStructure;
@@ -52,7 +53,7 @@ unsigned char get_slave_addr(void)
 	addr_B0 = GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0);
 	addr_B1 = GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_1);
 
-	return (addr_B1 * 2 + addr_B0);
+	return (addr_B1 * 2 + addr_B0 + 1); /* slave addr: 2, 3, 4 */
 }
 
 
@@ -93,11 +94,11 @@ void EXTI4_15_IRQHandler(void)
   if(EXTI_GetITStatus(EXTI_Line12) != RESET)
   {
 
-	printf("key\r\n");
-	start_once_a_time_adc_test();
-    /* Clear the EXTI line 0 pending bit */
-    EXTI_ClearITPendingBit(EXTI_Line12);
-	x9c103_wiper_up_or_down(5, WRIPE_UP);
+		start_once_a_time_adc_test();
+		/* Clear the EXTI line 0 pending bit */
+		EXTI_ClearITPendingBit(EXTI_Line12);
+		//printf("holding regs: %4x\r\n", usRegHoldingBuf[0]);
+
   }
 }
 /**************************EXIT KEY END**************************************************/

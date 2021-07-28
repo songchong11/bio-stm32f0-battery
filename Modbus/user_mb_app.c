@@ -141,29 +141,30 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 		switch(eMode)
 		{                                       
 			case MB_REG_READ://¶Á MB_REG_READ = 0
-        while(usNRegs > 0)
+				while(usNRegs > 0)
 				{
 					*pucRegBuffer++ = (u8)(usRegHoldingBuf[iRegIndex] >> 8);            
 					*pucRegBuffer++ = (u8)(usRegHoldingBuf[iRegIndex] & 0xFF); 
-          iRegIndex++;
-          usNRegs--;					
-				}                            
-        break;
+					iRegIndex++;
+					usNRegs--;					
+				}
+				break;
 			case MB_REG_WRITE://Ð´ MB_REG_WRITE = 0
 				while(usNRegs > 0)
-				{         
+				{
 					usRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;
-                    usRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;
-          iRegIndex++;
-          usNRegs--;
-        }				
+					usRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;
+					iRegIndex++;
+					usNRegs--;
+				}
+				break;
 			}
 	}
 	else//´íÎó
 	{
 		eStatus = MB_ENOREG;
-	}	
-	
+	}
+
 	return eStatus;
 }
  
@@ -194,7 +195,7 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
 	{
 		iRegIndex = (int)(usAddress - usRegHoldingStart);
 		switch(eMode)
-		{                                       
+		{
 			case MB_REG_READ://¶Á MB_REG_READ = 0
         while(usNCoils > 0)
 				{
@@ -236,7 +237,7 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
     
     //printf("%s %s: \r\n",__FILE__, __FUNCTION__);
-    
+
     ( void )pucRegBuffer;
     ( void )usAddress;
     ( void )usNDiscrete;

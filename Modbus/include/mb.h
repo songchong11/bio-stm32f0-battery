@@ -415,7 +415,7 @@ void  mb_Modbus_Init(void);
 
 void  user_mb_app( void );
 
-#define REG_INPUT_START 0x0001
+#define REG_INPUT_START 0x0004
 
 //输入寄存器数量
 
@@ -423,7 +423,7 @@ void  user_mb_app( void );
 
 //保持寄存器起始地址
 
-#define REG_HOLDING_START 0x0001
+#define REG_HOLDING_START 3101
 
 //保持寄存器数量
 

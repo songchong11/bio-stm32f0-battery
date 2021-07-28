@@ -14,7 +14,9 @@ uint16_t adc_0_value, adc_1_value, adc_2_value;
 float volt_0, volt_1, volt_2;
 extern uint16_t RegularConvData_Tab[4];
 extern uint8_t sample_finish;
-extern uint16_t adc_value[5];  
+extern uint16_t adc_value[5]; 
+
+extern uint16_t usRegHoldingBuf[REG_HOLDING_NREGS];
 
 //show you a blink
 int main(void)
@@ -54,12 +56,13 @@ int main(void)
 		//printf(" %x, %x %x  %x\r\n", RegularConvData_Tab[0], RegularConvData_Tab[1],RegularConvData_Tab[2],RegularConvData_Tab[3]);
 #if 1
         if (sample_finish == 1) {
-           printf(" %x %x %x %x %x\r\n", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
+			printf(" %x %x %x %x %x\r\n", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
 			sample_finish = 0;
-
         }
 #endif
 
+		if (usRegHoldingBuf[0] == 0x0105)
+			printf(" usRegHoldingBuf[0]: %4x \r\n", usRegHoldingBuf[0]);
 	}
 	
 }
