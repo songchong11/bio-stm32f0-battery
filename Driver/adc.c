@@ -25,7 +25,7 @@ uint8_t sample_index = 0;
 //采样点数据  
 #define ADC_COUNT  16
 uint32_t sample[5] = {0};  
-uint16_t adc_value[5] = { 0 };  
+uint16_t adc_value[5] = { 0 }; 
 
 
 //初始化ADC															   
