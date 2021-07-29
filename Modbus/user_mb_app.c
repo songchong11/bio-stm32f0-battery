@@ -92,7 +92,8 @@ void  user_mb_app( void )
      int             iRegIndex;
 
      //printf("%s %s: usAddress:%x usNRegs:%02x \r\n",__FILE__, __FUNCTION__, usAddress, usNRegs);
-     
+     msg_type = MSG_READ_HOLD_REGS;
+
      if( ( usAddress >= REG_INPUT_START )
          && ( usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS ) )
      {
@@ -145,6 +146,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 			case MB_REG_READ://¶Á MB_REG_READ = 0
 				while(usNRegs > 0)
 				{
+					msg_type = MSG_READ_HOLD_REGS;
 					*pucRegBuffer++ = (u8)(usRegHoldingBuf[iRegIndex] >> 8);            
 					*pucRegBuffer++ = (u8)(usRegHoldingBuf[iRegIndex] & 0xFF); 
 					iRegIndex++;

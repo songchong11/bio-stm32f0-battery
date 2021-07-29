@@ -154,13 +154,4 @@ int x9c103_wiper_up_or_down(uint8_t steps, uint8_t wripe_ud)
 	delay_ms(30);//store wripe position
 }
 
-void x9c103_store_wripe_position(void)
-{
-	X9C103_CS = 0;
-	X9C103_INC = 1;
-	delay_us(60);
-	X9C103_CS = 1;
-	delay_ms(50);
-}
-
 /**************************X9C103 END**************************************************/
