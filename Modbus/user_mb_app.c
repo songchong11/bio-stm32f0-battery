@@ -55,7 +55,7 @@ uint8_t ucRegDiscreteBuf[REG_DISCRETE_SIZE / 8] = {0x01,0x02};
 void  mb_Modbus_Init(void)
 {
 
-     ( void )eMBInit( MB_RTU, slave_address, 0, 115200, MB_PAR_NONE );
+     ( void )eMBInit( MB_RTU, slave_address, 0, 9600, MB_PAR_NONE );
  
      /* Enable the Modbus Protocol Stack. */
      ( void )eMBEnable(  );
