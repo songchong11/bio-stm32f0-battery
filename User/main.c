@@ -73,12 +73,16 @@ int main(void)
 
 			LED_G = !LED_G;
 			delay_ms(20);
+			
+			voltage[0].volt_f = (float)adc_value[0]*(3.3/4096);
+			voltage[1].volt_f = (float)adc_value[1]*(3.3/4096);
+			voltage[2].volt_f = (float)adc_value[2]*(3.3/4096);
+			voltage[3].volt_f = (float)adc_value[3]*(3.3/4096);
+			voltage[4].volt_f = (float)adc_value[4]*(3.3/4096);
 
-			voltage[0].volt_f = (float)adc_value[2]*(3.3/4096);
-			voltage[1].volt_f = (float)adc_value[3]*(3.3/4096);
-			voltage[2].volt_f = (float)adc_value[4]*(3.3/4096);
+			printf(" %f %f %f %f %f\r\n", voltage[0].volt_f, voltage[1].volt_f, voltage[2].volt_f,\
+															voltage[3].volt_f, voltage[4].volt_f);
 
-			//printf(" %f %f %f\r\n", voltage[0].volt_f, voltage[1].volt_f, voltage[2].volt_f);
 			memcpy(usRegInputBuf,	 &voltage[0].volt_v[0], 4);
 			memcpy(&usRegInputBuf[2],&voltage[1].volt_v[0], 4);
 			memcpy(&usRegInputBuf[4],&voltage[2].volt_v[0], 4);
