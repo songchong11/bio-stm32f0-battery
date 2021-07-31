@@ -1,6 +1,7 @@
 #include "adc.h"
 #include "delay.h"	
 #include "sys.h"
+#include "string.h"
 
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
@@ -51,7 +52,7 @@ void  Adc_Init(void)
     ADC_DeInit(ADC1);                                               //复位ADC  
     ADC_StructInit(&adc_init_structure);                            //初始化ADC结构体  
 
-    adc_init_structure.ADC_ContinuousConvMode = DISABLE;            //禁用连续转换模式  
+	adc_init_structure.ADC_ContinuousConvMode = DISABLE; 
     adc_init_structure.ADC_DataAlign = ADC_DataAlign_Right;         //采样数据右对齐  
     adc_init_structure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T3_TRGO; //外部触发设置为TIM2  
     adc_init_structure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_Rising;//上升沿触发  
@@ -62,7 +63,8 @@ void  Adc_Init(void)
     ADC_OverrunModeCmd(ADC1, ENABLE);                               //使能数据覆盖模式  
     ADC_ChannelConfig(ADC1, ADC_Channel_0 | ADC_Channel_1 | ADC_Channel_5  
                           | ADC_Channel_6 | ADC_Channel_7,  
-                          ADC_SampleTime_71_5Cycles);              //配置采样通道，采样时间125nS  
+                          ADC_SampleTime_239_5Cycles);              //配置采样通道，采样时间125nS  
+
     ADC_GetCalibrationFactor(ADC1);                                 //使能前校准ADC  
     ADC_Cmd(ADC1, ENABLE);                                          //使能ADC1  
     while(ADC_GetFlagStatus(ADC1, ADC_FLAG_ADEN) == RESET);         //等待ADC1使能完成  
@@ -116,7 +118,7 @@ void  Adc_Init(void)
     TIM_TimeBaseStructInit(&timer_init_structure);                  //初始化TIMBASE结构体  
     timer_init_structure.TIM_ClockDivision = TIM_CKD_DIV1;          //系统时钟，不分频，48M  
     timer_init_structure.TIM_CounterMode = TIM_CounterMode_Up;      //向上计数模式  
-    timer_init_structure.TIM_Period = 312;                          //每312 uS触发一次中断，开启ADC  
+    timer_init_structure.TIM_Period = 500;                          //每312 uS触发一次中断，开启ADC  
     timer_init_structure.TIM_Prescaler = 48-1;                      //计数时钟预分频，f＝1M，systick＝1 uS  
     timer_init_structure.TIM_RepetitionCounter = 0x00;              //发生0+1次update事件产生中断  
     TIM_TimeBaseInit(TIM3, &timer_init_structure);  
@@ -137,6 +139,7 @@ void TIM3_IRQHandler()
     }  
 }  
 
+#if 1
 void DMA1_Channel1_IRQHandler()  
 {  
     if(DMA_GetITStatus(DMA_IT_TC))                      //判断DMA传输完成中断  
@@ -161,16 +164,14 @@ void DMA1_Channel1_IRQHandler()
             adc_value[2] = sample[2] >> 4;
             adc_value[3] = sample[3] >> 4;
             adc_value[4] = sample[4] >> 4;
-			
-			sample[0] = 0;
-			sample[1] = 0;
-			sample[2] = 0;
-			sample[3] = 0;
-			sample[4] = 0;
+
+			memset(sample, 0, sizeof(sample));
         }  
     }  
     DMA_ClearITPendingBit(DMA_IT_TC);                   //清除DMA中断标志位  
 }
+#endif
+
 
 void start_once_a_time_adc_test(void)
 {
