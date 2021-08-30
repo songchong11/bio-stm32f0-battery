@@ -5,6 +5,9 @@
 #include "delay.h"
 #include "mb.h"
 
+extern u16 res_value;
+
+
 void LED_Init(void){
 	 GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -94,10 +97,10 @@ void EXTI4_15_IRQHandler(void)
   if(EXTI_GetITStatus(EXTI_Line12) != RESET)
   {
 
-		start_once_a_time_adc_test();
-		/* Clear the EXTI line 0 pending bit */
-		EXTI_ClearITPendingBit(EXTI_Line12);
-		//printf("holding regs: %4x\r\n", usRegHoldingBuf[0]);
+			start_once_a_time_adc_test();
+			/* Clear the EXTI line 0 pending bit */
+			EXTI_ClearITPendingBit(EXTI_Line12);
+			//printf("holding regs: %4x\r\n", usRegHoldingBuf[0]);
 	    x9c103_wiper_up_or_down(5, WRIPE_UP);
   }
 }
@@ -123,7 +126,12 @@ void x9c103_gpio_init(void)
 	X9C103_UD = 0;
 	X9C103_CS = 0;
 
+	x9c103_wiper_up_or_down(100, WRIPE_UP);
+
 }
+
+#define RES_MAX  10000
+#define RES_MIN  10
 
 
 int x9c103_wiper_up_or_down(uint8_t steps, uint8_t wripe_ud)
@@ -131,8 +139,10 @@ int x9c103_wiper_up_or_down(uint8_t steps, uint8_t wripe_ud)
 	int i;
 
 	if (steps > 100 || steps < 0) {
+#if ENABLE_DEBUG_LOG
 			printf("err wripe steps %d\r\n", steps);
-			return -1;
+#endif
+			//return -1;
 	}
 	
 	X9C103_CS = 0;
@@ -141,6 +151,18 @@ int x9c103_wiper_up_or_down(uint8_t steps, uint8_t wripe_ud)
 	delay_us(10);
 	
 	for(i = 0; i < steps; i++) {
+		if (wripe_ud) {
+				res_value += 100;
+				if (res_value > RES_MAX)
+					res_value = RES_MAX;
+		} else {
+				if (res_value < 100)
+					res_value = RES_MIN;
+				else
+					res_value -= 100;
+
+		}
+		
 		X9C103_INC = 0;
 		delay_us(5);
 		X9C103_INC = 1;

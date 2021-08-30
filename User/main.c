@@ -29,7 +29,15 @@ union volt{
 	float volt_f;
 };
 
-static union volt voltage[3];
+union cur{
+	unsigned char current_i[4];
+	float current_f;
+};
+
+static union volt voltage[5];
+static union cur current[5];
+
+u16 res_value = 0;
 
 //show you a blink
 int main(void)
@@ -48,11 +56,12 @@ int main(void)
 	delay_ms(100);
 	x9c103_gpio_init();
 
-
+#if ENABLE_DEBUG_LOG
 	printf("slave_address is %d\r\n\r\n", slave_address);
 	
 	printf("bio-battery init ok start main...\r\n");
-	
+#endif
+
 #if 0
 	//this is ok
 	f_test.volt_f = 3.2999;
@@ -65,38 +74,45 @@ int main(void)
 
     while (1)
     {
-		user_mb_app();
+				user_mb_app();
 		
 /*********************************** ADC measure ************************************************************************/
         if (sample_finish == 1) {
-			//printf(" %x %x %x %x %x\r\n", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
+					//printf(" %x %x %x %x %x\r\n", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
 
-#if 1
-			LED_G = !LED_G;
-			delay_ms(20);
+		#if 1
+					LED_G = !LED_G;
+					delay_ms(20);
 
-			voltage[0].volt_f = (float)adc_value[0]*(3.3/4096);
-			voltage[1].volt_f = (float)adc_value[1]*(3.3/4096);
-			voltage[2].volt_f = (float)adc_value[2]*(3.3/4096);
-			voltage[3].volt_f = (float)adc_value[3]*(3.3/4096);
-			voltage[4].volt_f = (float)adc_value[4]*(3.3/4096);
-#endif
-			//printf(" %f %f %f %f %f\r\n", voltage[0].volt_f, voltage[1].volt_f, voltage[2].volt_f,\
-															voltage[3].volt_f, voltage[4].volt_f);
-#if 1
-			memcpy(usRegInputBuf,	 &voltage[0].volt_v[0], 4);
-			memcpy(&usRegInputBuf[2],&voltage[1].volt_v[0], 4);
-			memcpy(&usRegInputBuf[4],&voltage[2].volt_v[0], 4);
-#endif
-			//printf(" %x %x %x %x %x %x\r\n\r\n",usRegInputBuf[0], usRegInputBuf[1], usRegInputBuf[2]\
-										,usRegInputBuf[3], usRegInputBuf[4], usRegInputBuf[5]);
+					voltage[0].volt_f = (float)adc_value[0]*(3.3/4096);
+					//voltage[1].volt_f = (float)adc_value[1]*(3.3/4096);
+					//voltage[2].volt_f = (float)adc_value[2]*(3.3/4096);
+					//voltage[3].volt_f = (float)adc_value[3]*(3.3/4096);
+					//voltage[4].volt_f = (float)adc_value[4]*(3.3/4096);
+		#endif
+					//printf(" %f %f %f %f %f\r\n", voltage[0].volt_f, voltage[1].volt_f, voltage[2].volt_f,\
+																	voltage[3].volt_f, voltage[4].volt_f);
+		#if 1
+					memcpy(usRegInputBuf,	 &voltage[0].volt_v[0], 4); //voltage
 
-			//printf("--------- %f -----------\r\n",f_test.volt_f);
-			//printf(" %x %x %x %x\r\n", f_test.volt_v[0], f_test.volt_v[1],f_test.volt_v[2],f_test.volt_v[3]);
 
-			sample_finish = 0;
-			TIM_Cmd(TIM3, ENABLE);                     //完成周波采样，停止定时器  
-			DMA_Cmd(DMA1_Channel1, ENABLE);            //完成周波采样，停止DMA
+					current[0].current_f = voltage[0].volt_f / res_value;
+					memcpy(&usRegInputBuf[2],	 &current[0].current_i[0], 4); //current
+					
+					memcpy(&usRegInputBuf[4],	 &res_value, 2); //current
+					
+					usRegInputBuf[4] = res_value;// for debug
+					
+		#endif
+					//printf(" %x %x %x %x %x %x\r\n\r\n",usRegInputBuf[0], usRegInputBuf[1], usRegInputBuf[2]\
+												,usRegInputBuf[3], usRegInputBuf[4], usRegInputBuf[5]);
+
+					//printf("--------- %f -----------\r\n",f_test.volt_f);
+					//printf(" %x %x %x %x\r\n", f_test.volt_v[0], f_test.volt_v[1],f_test.volt_v[2],f_test.volt_v[3]);
+
+					sample_finish = 0;
+					TIM_Cmd(TIM3, ENABLE);                     //完成周波采样，停止定时器  
+					DMA_Cmd(DMA1_Channel1, ENABLE);            //完成周波采样，停止DMA
 
         }
 /*****************************WRITE holding reges***********************************************************************************/

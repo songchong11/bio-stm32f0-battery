@@ -37,7 +37,9 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us )
 			//arr：自动重装值。
 			//psc：时钟预分频数
 			//这里使用的是定时器3!
+#if ENABLE_DEBUG_LOG
 			printf("port timer init\r\n");
+#endif
 			TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 			NVIC_InitTypeDef NVIC_InitStructure;
 

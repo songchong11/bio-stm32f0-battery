@@ -36,7 +36,7 @@ extern volatile int msg_type;
 
 /* Private variables ---------------------------------------------------------*/
 //输入寄存器内容
-uint16_t usRegInputBuf[REG_INPUT_NREGS] = {0x1000,0x1001,0x1002,0x1003,0x1004,0x1005,0x1006,0x1007};
+uint16_t usRegInputBuf[REG_INPUT_NREGS] = {0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000};
 
 //输入寄存器起始地址
 uint16_t usRegInputStart = REG_INPUT_START;

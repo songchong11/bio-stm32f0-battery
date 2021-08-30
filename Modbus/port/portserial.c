@@ -126,9 +126,9 @@ xMBPortSerialInit( UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity e
 		USART_ITConfig(MODBUS_USART, USART_IT_RXNE, ENABLE);//开启中断
 		 
 		USART_Cmd(MODBUS_USART, ENABLE);                    //使能串口 
-		
+#if ENABLE_DEBUG_LOG
 		printf("Modbus serial port init ok\r\n");
-
+#endif
     return TRUE;
 }
 
